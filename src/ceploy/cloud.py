@@ -3,8 +3,6 @@
 # Author: Thamir M. Qadah
 ################################
 
-import ceploy.provider.google
-
 class Cloud:
     providerName = 'google'
     def __init__(self, providerName='google'):

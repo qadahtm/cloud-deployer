@@ -3,44 +3,44 @@
 # Author: Thamir M. Qadah
 ################################
 
-import glob
 import os
-import sys
-import socket
-import re
-import shlex, subprocess
+import subprocess
 import smtplib
-import shutil
-import pprint
 import threading
 import json
-import time
-from datetime import timedelta
-import multiprocessing
+
 
 # from termcolor import colored, cprint
-import ceploy.constants
 
 class Utils:
 
-    def __init__(self, secrets_path, from_addr, to_addr):
-        with open(secrets_path) as data_file:
-            self.secrets = json.load(data_file)
+    server_init = False
+
+    def __init__(self, secrets_path='', from_addr='', to_addr=''):
+        if secrets_path != '':
+            with open(secrets_path) as data_file:
+                self.secrets = json.load(data_file)
+        else:
+            self.secrets = {}
 
         self.from_addr = from_addr
         self.to_addr = to_addr
 
+        self.server_init = False
+
+    def __del__(self):
+        if self.server_init:
+            self.server.quit()
+
+
+    def init_email_server(self):
         username = self.secrets['uname']
         password = self.secrets['password']
-
         # TODO(tq): de we need to login every time or once here is enough
         self.server = smtplib.SMTP(self.secrets['smtp_server_uri'])
         self.server.ehlo()
         self.server.starttls()
         self.server.login(username, password)
-
-    def __del__(self):
-        self.server.quit()
 
     def send_email(self, subject, msg):
         rmsg = "\r\n".join([
@@ -60,9 +60,13 @@ class Utils:
             print('Output:')
             for ol in p.stdout:
                 print(ol.decode(encoding="utf-8", errors="strict"), end='')
+            p.stdout.close()
+
             print('Error:')
             for el in p.stderr:
                 print(el.decode(encoding="utf-8", errors="strict"), end='')
+            p.stderr.close()
+
         return p
 
     def live_output(p):
@@ -70,56 +74,6 @@ class Utils:
         while p.poll() is None:
             print(p.stdout.readline().decode(encoding="utf-8", errors="strict"), end='')
         print(p.stdout.readline().decode(encoding="utf-8", errors="strict"), end='')
-
-    def wait_for(plist, expds=None, outputFlag=False, liveOutput=False, live_output_node_idx=0):
-        if liveOutput:
-            live_output(plist[live_output_node_idx]);
-        # done observing live output if enabled
-        failed = False
-        output = ''
-        for i, p in enumerate(plist):
-            if p:
-                if verbose:
-                    print("Waiting for node {} at {}".format(i, node_list[i]))
-                try:
-                    stdout, stderr = p.communicate(timeout=400)
-                    killed = False
-                except subprocess.TimeoutExpired:
-                    kill_all_processes()
-                    stdout, stderr = p.communicate(timeout=10)
-                    killed = True
-
-                stdout = stdout.decode('utf-8')
-                stderr = stderr.decode('utf-8')
-                output = output + '\n\n' + stdout + '\n\n' + stderr
-
-                if p.returncode != 0 or killed:
-                    error_s = 'Node[{}] at {} '.format(i, node_list[i])
-                    if expds:
-                        error_s = error_s + ('failed to run exp for %s (status=%s, killed=%s)' % (
-                        format_exp(expds), p.returncode, killed))
-                    else:
-                        error_s = error_s + (
-                                    'failed to run remote command (status=%s, killed=%s)' % (p.returncode, killed))
-
-                    print(COLOR_RED + error_s + COLOR_RESET)
-                    failed = True
-
-        if expds:
-            filename = dir_name + '/' + gen_filename(expds)
-            if failed:
-                f_filename = filename + '.failed'
-            else:
-                f_filename = filename
-            outf = open(f_filename, 'w')
-            outf.write(output)
-
-        elif outputFlag:
-            print('Output of node: {}'.format(i))
-            print(output)
-            # for ol in p.stdout:
-            # print(ol.decode(encoding="utf-8", errors="strict"), end='')
-            print('----- End of output of node {} -----'.format(i))
 
 class expThread (threading.Thread):
 

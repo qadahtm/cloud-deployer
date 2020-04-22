@@ -1,0 +1,7 @@
+{"uname":"uname_test",
+"password":"uname_pass",
+"smtp_server_uri":"smtp.gmail.com",
+"azlogin":"azlogin_test",
+"azsub_id":"azid_test",
+"vm_name":"vmname_test"
+}
