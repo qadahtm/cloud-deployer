@@ -14,7 +14,7 @@ from ceploy.cloud import Cloud
 from ceploy.constants import Provider
 
 def main():
-    gcloud = Cloud.make(Provider.GCLOUD, '../gcloud_conf.json')
+    gcloud = Cloud.make(Provider.GCLOUD, '../gcloud_conf.yml')
 
 
 
