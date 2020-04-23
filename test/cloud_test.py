@@ -16,8 +16,8 @@ from ceploy.constants import Provider
 
 class BasicTests(unittest.TestCase):
     def test_classes(self):
-        gcloud = Cloud.make(Provider.GCLOUD)
-        aws = Cloud.make(Provider.AWS)
+        gcloud = Cloud.make(Provider.GCLOUD, 'test/utils_test_config_sample.yml')
+        aws = Cloud.make(Provider.AWS, 'test/utils_test_config_sample.json')
 
         self.assertEqual(gcloud.code, Provider.GCLOUD)
         self.assertEqual(aws.code, Provider.AWS)

@@ -16,8 +16,13 @@ from ceploy.utils import Utils
 
 class BasicTests(unittest.TestCase):
 
-    def test_Utils_init(self):
-        utils_test = Utils('{}utils_test_config_sample.json'.format('./' if (os.getcwd().find('test') > 0) else "./test/"), 'from@test.com', 'to@test.com')
+    def test_Utils_JSON_init(self):
+        utils_test = Utils('{}utils_test_config_sample.json'.format('./' if (os.getcwd().find('test') > 0) else "./test/"))
+        secrets = utils_test.secrets
+        self.assertEqual(secrets['uname'], 'uname_test')
+
+    def test_Utils_YAML_init(self):
+        utils_test = Utils('{}utils_test_config_sample.yml'.format('./' if (os.getcwd().find('test') > 0) else "./test/"))
         secrets = utils_test.secrets
         self.assertEqual(secrets['uname'], 'uname_test')
 

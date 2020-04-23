@@ -9,8 +9,8 @@ Class for AWS specific implementation
 """
 class AWSCloud(Cloud):
 
-    def __init__(self):
-        super().__init__()
+    def __init__(self, conf_file):
+        super().__init__(conf_file)
         from ceploy.constants import Provider
         self.code = Provider.AWS
 

@@ -1,0 +1,15 @@
+# Email configuration
+uname: "uname_test"
+password: "uname_pass"
+from_addr: "from@test.com"
+to_addr: "to@test.com"
+smtp_server_uri: "smtp.gmail.com"
+# Google Config
+gcloud_key_file: "path/to/key_file.json"
+gcloud_project_name: "project1"
+gcloud_user: "user_test"
+#Azure config
+azlogin: "azlogin_test"
+azsub_id: "azid_test"
+vm_name: "vmname_test"
+

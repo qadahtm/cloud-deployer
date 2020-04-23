@@ -1,7 +1,11 @@
-{"uname":"uname_test",
-"password":"uname_pass",
-"smtp_server_uri":"smtp.gmail.com",
-"azlogin":"azlogin_test",
-"azsub_id":"azid_test",
-"vm_name":"vmname_test"
+{
+  "uname": "uname_test",
+  "password": "uname_pass",
+  "from_addr": "from@test.com",
+  "to_addr": "to@test.com",
+  "gcloud_key_file": "path/to/key_file.json",
+  "smtp_server_uri": "smtp.gmail.com",
+  "azlogin": "azlogin_test",
+  "azsub_id": "azid_test",
+  "vm_name": "vmname_test"
 }
