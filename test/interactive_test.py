@@ -15,6 +15,24 @@ from ceploy.constants import Provider
 
 def main():
     gcloud = Cloud.make(Provider.GCLOUD, '../gcloud_conf.yml')
+    vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
+    for vm in vm_list:
+        print(vm['name'])
+
+    cmd_out = gcloud.create_instance("c8-qcd-test", "c8-qstore")
+    print(cmd_out)
+
+    vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
+    for vm in vm_list:
+        print(vm['name'])
+
+    cmd_out = gcloud.delete_instance("c8-qcd-test")
+    print(cmd_out)
+
+    vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
+    for vm in vm_list:
+        print(vm['name'])
+
 
 
 

@@ -12,7 +12,14 @@ class Cloud:
         from ceploy.utils import Utils
         self.utils = Utils(conf_file)
 
+## Instances methods
     def list_instances(self):
+        pass
+
+    def create_instance(self, name, template):
+        pass
+
+    def delete_instance(self, name):
         pass
 
     def getCloudCode(self):

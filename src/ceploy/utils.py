@@ -9,6 +9,8 @@ import smtplib
 import threading
 # from termcolor import colored, cprint
 
+from ceploy.constants import OutputColors
+
 class Utils:
 
     server_init = False
@@ -56,19 +58,25 @@ class Utils:
 
     def exec_cmd(self, cmd, is_async=False):
         p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True, env=dict(os.environ))
+        output = ""
+        err = ""
+        json_out = {}
         if not is_async:
             p.wait()
-            print('Output:')
             for ol in p.stdout:
-                print(ol.decode(encoding="utf-8", errors="strict"), end='')
+                line = ol.decode(encoding="utf-8", errors="strict")
+                # print(line, end='')
+                output += line
             p.stdout.close()
 
-            print('Error:')
             for el in p.stderr:
-                print(el.decode(encoding="utf-8", errors="strict"), end='')
+                line = el.decode(encoding="utf-8", errors="strict")
+                # print(line, end='')
+                err += line
             p.stderr.close()
-
-        return p
+        if len(err) > 0:
+            print("{}{}{}".format(OutputColors.COLOR_RED, err, OutputColors.COLOR_RESET))
+        return p, output, err
 
     def live_output(p):
         print("liveOutput for {}".format(str(p)))
