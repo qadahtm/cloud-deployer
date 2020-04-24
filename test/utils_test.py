@@ -30,9 +30,9 @@ class BasicTests(unittest.TestCase):
     def test_Utils_exec_cmd(self):
         utils_test = Utils()
         cmd = 'echo Hello Test'
-        p = utils_test.exec_cmd(cmd)
-
-
+        p, output, err = utils_test.exec_cmd(cmd)
+        self.assertEqual(len(output), 11)
+        self.assertEqual(len(err), 0)
 
 if __name__ == '__main__':
     unittest.main()
