@@ -14,7 +14,7 @@ class AWSCloud(Cloud):
         from ceploy.constants import Provider
         self.code = Provider.AWS
 
-    def getCloudName(self):
+    def get_cloud_name(self):
         return "AWS Cloud"
 
     def list_instances(self):

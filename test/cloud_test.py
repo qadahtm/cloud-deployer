@@ -22,8 +22,8 @@ class BasicTests(unittest.TestCase):
         self.assertEqual(gcloud.code, Provider.GCLOUD)
         self.assertEqual(aws.code, Provider.AWS)
 
-        self.assertEqual(gcloud.getCloudName(), "Google Cloud")
-        self.assertEqual(aws.getCloudName(), "AWS Cloud")
+        self.assertEqual(gcloud.get_cloud_name(), "Google Cloud")
+        self.assertEqual(aws.get_cloud_name(), "AWS Cloud")
 
 
 if __name__ == '__main__':

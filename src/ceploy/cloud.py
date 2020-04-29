@@ -25,8 +25,11 @@ class Cloud:
     def getCloudCode(self):
         return self.code
 
-    def getCloudName(self):
+    def get_cloud_name(self):
         return "Invalid cloud instance"
+
+    def vm_to_str(self, vm) -> str:
+        return str(vm)
 
     def make(provider_code, conf_file=''):
 
@@ -40,3 +43,9 @@ class Cloud:
         else:
             raise ValueError("Provider not supported")
 
+class Site:
+
+    def __init__(self, yml_conf):
+        import yaml
+        with open(yml_conf) as conf_file:
+            self.conf = yaml.load(conf_file, Loader=yaml.FullLoader)

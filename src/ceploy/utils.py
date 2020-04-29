@@ -17,14 +17,19 @@ class Utils:
 
     def __init__(self, conf_file_path=''):
         if conf_file_path != '':
-            if conf_file_path.find('json') > 0:
-                import json
-                with open(conf_file_path) as data_file:
-                    self.secrets = json.load(data_file)
-            elif conf_file_path.find('yml') > 0:
-                import yaml
-                with open(conf_file_path) as data_file:
-                    self.secrets = yaml.load(data_file, Loader=yaml.FullLoader)
+            try:
+                if conf_file_path.find('json') > 0:
+                    import json
+                    with open(conf_file_path) as data_file:
+                        self.secrets = json.load(data_file)
+                elif conf_file_path.find('yml') > 0:
+                    import yaml
+                    with open(conf_file_path) as data_file:
+                        self.secrets = yaml.load(data_file, Loader=yaml.FullLoader)
+            except:
+                print("Cloud not read configuration file.")
+                self.secrets = {}
+
 
         else:
             self.secrets = {}

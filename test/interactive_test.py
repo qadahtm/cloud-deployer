@@ -17,24 +17,22 @@ def main():
     gcloud = Cloud.make(Provider.GCLOUD, '../gcloud_conf.yml')
     vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
     for vm in vm_list:
-        print(vm['name'])
+        print(gcloud.vm_to_str(vm))
 
-    cmd_out = gcloud.create_instance("c8-qcd-test", "c8-qstore")
-    print(cmd_out)
 
-    vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
-    for vm in vm_list:
-        print(vm['name'])
-
-    cmd_out = gcloud.delete_instance("c8-qcd-test")
-    print(cmd_out)
+    cmd_out = gcloud.create_instance("c8-qcd-test-1", "c8-qstore", "us-east1-b")
+    cmd_out = gcloud.create_instance("c8-qcd-test-2", "c8-qstore", "us-east1-c")
 
     vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
     for vm in vm_list:
-        print(vm['name'])
+        print(gcloud.vm_to_str(vm))
 
+    cmd_out = gcloud.delete_instance("c8-qcd-test-1", zone='us-east1-b')
+    cmd_out = gcloud.delete_instance("c8-qcd-test-2", zone='us-east1-c')
 
-
+    vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
+    for vm in vm_list:
+        print(gcloud.vm_to_str(vm))
 
 
 if __name__ == '__main__':
