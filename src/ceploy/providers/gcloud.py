@@ -48,11 +48,11 @@ class GCloud(Cloud):
         else:
             return {}
 
-    def delete_instance(self, name):
-        msg = "Deleteing a VM instance with name: {}".format(name)
+    def delete_instance(self, name, zone):
+        msg = "Deleteing a VM instance with name: {}, zone: {}".format(name, zone)
         print("{}{}{}".format(OutputColors.COLOR_RED, msg, OutputColors.COLOR_RESET))
-        cmd_template = "{} instances delete {} --format json -q"
-        cmd = cmd_template.format(GCloud.COMPUTE_CMD, name)
+        cmd_template = "{} instances delete {} --format json -q --zone={}"
+        cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, zone)
         _, output, err = self.utils.exec_cmd(cmd)
         if len(output) > 0:
             return json.loads(output)
