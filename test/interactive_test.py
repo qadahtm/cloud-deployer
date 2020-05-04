@@ -23,7 +23,7 @@ def main():
     cmd_out = gcloud.create_instance("n8-qcd-test-1", "n8-qstore", "us-east1-b")
     cmd_out = gcloud.create_instance("n8-qcd-test-2", "n8-qstore", "us-west1-a")
 
-    vm_list = gcloud.list_instances(filter_str="name~'(c|n)\\d\\-qcd\\-.'")
+    vm_list = gcloud.list_instances(filter_str="name~'(c|n)?\\d?\\-?qcd\\-.'")
     for vm in vm_list:
         print(gcloud.vm_to_str(vm))
 
