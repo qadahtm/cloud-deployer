@@ -49,3 +49,13 @@ class Site:
         import yaml
         with open(yml_conf) as conf_file:
             self.conf = yaml.load(conf_file, Loader=yaml.FullLoader)
+
+class VmInstance:
+    def __init__(self, vm_desc):
+        self.ext_ip = ""
+        self.int_ip = ""
+        self.name = ""
+        self.zone = ""
+        self.fqn = ""
+        self.status = ""
+

@@ -4,6 +4,7 @@
 ################################
 
 from ceploy import Cloud
+from ceploy.cloud import VmInstance
 import json
 from ceploy.constants import OutputColors
 
@@ -67,6 +68,16 @@ class GCloud(Cloud):
         intIP = vm['networkInterfaces'][0]['networkIP']
         vm_status = vm['status']
         return "name: {}, zone: {}, extIP: {}, intIP: {}, status: {}".format(name, zone, extIP, intIP, vm_status)
+
+class GCVM(VmInstance):
+
+    def __init__(self, vm):
+        super().__init__(vm)
+        self.name = vm['name']
+        self.ext_ip = "" if 'natIP' not in dict(vm['networkInterfaces'][0]['accessConfigs'][0]).keys() else vm['networkInterfaces'][0]['accessConfigs'][0]['natIP']
+        self.zone = get_zone(vm['zone'])
+        self.int_ip = vm['networkInterfaces'][0]['networkIP']
+        self.status = vm['status']
 
 # Module functions
 def get_zone(zone_attr : str) -> str:

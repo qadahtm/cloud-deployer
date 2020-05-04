@@ -13,26 +13,40 @@ sys.path.append("../src") # when running inside the test directory
 from ceploy.cloud import Cloud
 from ceploy.constants import Provider
 
+from pprint import pprint
+
 def main():
+    ## Create cloud context for GCloud
     gcloud = Cloud.make(Provider.GCLOUD, '../gcloud_conf.yml')
+
+    ## Test list instance function
     vm_list = gcloud.list_instances(filter_str="name~'n\\d\\-qcd\\-.'")
     for vm in vm_list:
         print(gcloud.vm_to_str(vm))
 
 
+    ## Test create instance function
     cmd_out = gcloud.create_instance("n8-qcd-test-1", "n8-qstore", "us-east1-b")
+    pprint(cmd_out[0])
 
-    print(cmd_out)
+    ## Test VMInstance
+    from ceploy.providers.gcloud import GCVM
+    vm = GCVM(cmd_out[0])
+    print("name={}, zone={}, ext_ip={}, int_ip={}, status={}".format(vm.name, vm.zone , vm.ext_ip, vm.int_ip, vm.status))
 
+    # Create another VM instance
     cmd_out = gcloud.create_instance("n8-qcd-test-2", "n8-qstore", "us-west1-a")
 
+    # List created instances
     vm_list = gcloud.list_instances(filter_str="name~'n\\d\\-qcd\\-.'")
     for vm in vm_list:
         print(gcloud.vm_to_str(vm))
 
+    # Delete created instances
     cmd_out = gcloud.delete_instance("n8-qcd-test-1", zone='us-east1-b')
     cmd_out = gcloud.delete_instance("n8-qcd-test-2", zone='us-west1-a')
 
+    # List (should be empty)
     vm_list = gcloud.list_instances(filter_str="name~'c\\d\\-qcd\\-.'")
     for vm in vm_list:
         print(gcloud.vm_to_str(vm))
