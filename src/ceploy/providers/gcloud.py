@@ -45,9 +45,9 @@ class GCloud(Cloud):
         cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, template, zone)
         _, output, err = self.utils.exec_cmd(cmd)
         if len(output) > 0:
-            return json.loads(output)
+            return True, json.loads(output), err
         else:
-            return {}
+            return False, {}, err
 
     def delete_instance(self, name, zone):
         msg = "Deleteing a VM instance with name: {}, zone: {}".format(name, zone)
@@ -56,15 +56,15 @@ class GCloud(Cloud):
         cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, zone)
         _, output, err = self.utils.exec_cmd(cmd)
         if len(output) > 0:
-            return json.loads(output)
+            return True, json.loads(output), err
         else:
-            return {}
+            return False, {}, err
 
     def vm_to_str(self, vm: dict) -> str:
         # print(json.dumps(vm, indent=2))
         name = vm['name']
         zone = get_zone(vm['zone'])
-        extIP = "" if 'natIP' not in dict(vm['networkInterfaces'][0]).keys() else vm['networkInterfaces'][0]['natIP']
+        extIP = "" if 'natIP' not in dict(vm['networkInterfaces'][0]['accessConfigs'][0]).keys() else vm['networkInterfaces'][0]['accessConfigs'][0]['natIP']
         intIP = vm['networkInterfaces'][0]['networkIP']
         vm_status = vm['status']
         return "name: {}, zone: {}, extIP: {}, intIP: {}, status: {}".format(name, zone, extIP, intIP, vm_status)
