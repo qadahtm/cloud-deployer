@@ -19,7 +19,19 @@ class Cloud:
     def create_instance(self, name, template):
         pass
 
-    def delete_instance(self, name):
+    def delete_instance(self, name, zone=None):
+        pass
+    
+    def stop_instance(self, name):
+        pass
+
+    def start_instance(self, name):
+        pass
+
+    async def stop_instance_async(self, name):
+        pass
+
+    async def start_instance_async(self, name):
         pass
 
     def getCloudCode(self):

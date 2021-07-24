@@ -38,27 +38,67 @@ class GCloud(Cloud):
         json_out = json.loads(output)
         return json_out
 
-    def create_instance(self, name, template, zone):
+    def create_instance(self, name, template, zone=''):
         msg = "Creating a VM instance using name:{},  template: {}, zone={}".format(name, template, zone)
         print("{}{}{}".format(OutputColors.COLOR_GREEN, msg, OutputColors.COLOR_RESET))
-        cmd_template = "{} instances create {} --format json -q --source-instance-template={} --zone={}"
-        cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, template, zone)
-        _, output, err = self.utils.exec_cmd(cmd)
-        if len(output) > 0:
-            return True, json.loads(output), err
+        msg = "checking if it already exists"
+        print("{}{}{}".format(OutputColors.COLOR_YELLOW, msg, OutputColors.COLOR_RESET))
+        ins_list = self.list_instances('"name~\'{}\'"'.format(name))
+        if len(ins_list) > 0:
+            msg = "Already exists, name:{},  template: {}, zone={}, starting instance ...".format(name, template, zone)
+            print("{}{}{}".format(OutputColors.COLOR_GREEN, msg, OutputColors.COLOR_RESET))
+            return self.start_instance(name, zone)
         else:
-            return False, {}, err
+            cmd_template = "{} instances create {} --format json -q --source-instance-template={} --zone={}"
+            cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, template, zone)
+            _, output, err = self.utils.exec_cmd(cmd)
+            if len(output) > 0:
+                return True, json.loads(output), err
+            else:
+                return False, {}, err
 
-    def delete_instance(self, name, zone):
-        msg = "Deleteing a VM instance with name: {}, zone: {}".format(name, zone)
+
+    def stop_instance(self, name, zone=''):
+        msg = "Stopping a VM instance with name: {}, zone: {}".format(name, zone)
         print("{}{}{}".format(OutputColors.COLOR_RED, msg, OutputColors.COLOR_RESET))
-        cmd_template = "{} instances delete {} --format json -q --zone={}"
+        cmd_template = "{} instances stop {} --format json -q --zone={}"
         cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, zone)
         _, output, err = self.utils.exec_cmd(cmd)
         if len(output) > 0:
             return True, json.loads(output), err
         else:
             return False, {}, err
+
+    def start_instance(self, name, zone=''):
+        msg = "Starting a VM instance with name: {}, zone: {}".format(name, zone)
+        print("{}{}{}".format(OutputColors.COLOR_GREEN, msg, OutputColors.COLOR_RESET))
+        cmd_template = "{} instances start {} --format json -q --zone={}"
+        cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, zone)
+        _, output, err = self.utils.exec_cmd(cmd)
+        if len(output) > 0:
+            return True, json.loads(output), err
+        else:
+            return False, {}, err
+
+    def delete_instance(self, name, zone=''):
+        msg = "Deleteing a VM instance with name: {}, zone: {}".format(name, zone)
+        print("{}{}{}".format(OutputColors.COLOR_RED, msg, OutputColors.COLOR_RESET))
+        msg = "checking if it already exists"
+        print("{}{}{}".format(OutputColors.COLOR_YELLOW, msg, OutputColors.COLOR_RESET))
+        ins_list = self.list_instances('"name~\'{}\'"'.format(name))
+        if len(ins_list) > 0:
+            cmd_template = "{} instances delete {} --format json -q --zone={}"
+            cmd = cmd_template.format(GCloud.COMPUTE_CMD, name, zone)
+            _, output, err = self.utils.exec_cmd(cmd)
+            if len(output) > 0:
+                return True, json.loads(output), err
+            else:
+                return False, {}, err
+        else:
+            msg = "Instance does not exist, name:{}, zone={}".format(name, zone)
+            print("{}{}{}".format(OutputColors.COLOR_GREEN, msg, OutputColors.COLOR_RESET))
+            return True, {}, ""
+
 
     def vm_to_str(self, vm: dict) -> str:
         # print(json.dumps(vm, indent=2))
